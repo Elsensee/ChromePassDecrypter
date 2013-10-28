@@ -51,11 +51,11 @@ namespace ChromePassDecrypter
 			{
 				// These directories are not important for us
 				if (subDirInfo[i].Name == "PepperFlash" ||
-				    subDirInfos[i].Name == "Performance Monitor Databases" ||
-				    subDirInfos[i].Name == "pnacl" ||
-				    subDirInfos[i].Name == "SwiftShader" ||
-				    subDirInfos[i].Name == "Temp" ||
-				    subDirInfos[i].Name == "WidevineCDM")
+				    subDirInfo[i].Name == "Performance Monitor Databases" ||
+				    subDirInfo[i].Name == "pnacl" ||
+				    subDirInfo[i].Name == "SwiftShader" ||
+				    subDirInfo[i].Name == "Temp" ||
+				    subDirInfo[i].Name == "WidevineCDM")
 				{
 					continue;
 				}
@@ -63,7 +63,7 @@ namespace ChromePassDecrypter
 				result.AddRange(GetPasswords(subDirInfo[i].FullName + @"\Login Data"));
 			}
 			
-			return result.ToArray(typeof(Credential));
+			return (Credential[])result.ToArray();
 		}
 		
 		private static Credential[] GetPasswords(string pathToPasswordsFile)
@@ -118,7 +118,7 @@ namespace ChromePassDecrypter
 				// Some tweaking tools will clean this folder at some point..
 			}
 			
-			return result.ToArray(typeof(Credential));
+			return (Credential[])result.ToArray();
 		}
 	}
 }
