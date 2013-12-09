@@ -31,7 +31,7 @@ namespace ChromePassDecrypter
 	/// <summary>
 	/// Contains website, username and password extracted from Google Chrome's password file.
 	/// </summary>
-	public class Credential
+	public class ChromeCredential
 	{
 		string password;
 		string url;
@@ -71,9 +71,9 @@ namespace ChromePassDecrypter
 		}
 		
 		/// <summary>
-		/// Creates a new instance of the Credential class with the given url, username and password.
+		/// Creates a new instance of the ChromeCredential class with the given url, username and password.
 		/// </summary>
-		internal Credential(string url, string username, string password)
+		internal ChromeCredential(string url, string username, string password)
 		{
 			this.password = password;
 			this.username = username;
